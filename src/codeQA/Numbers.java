@@ -1,3 +1,5 @@
+package codeQA;
+
 public class Numbers {
 
     public int sumNumbers(int n1, int n2) {
