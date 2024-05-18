@@ -1,0 +1,9 @@
+
+
+ID: 1
+Title: Valid12345
+Body: This is the body of the post for Easy type. can be less than 300 characters. 
+Type: Easy
+Emergency: Ordinary
+Tags: tag1, tag2, tag3, 
+
