@@ -79,15 +79,15 @@ public class Post {
      * Other types of post should have a minimum of 250 characters.
      **/
     private boolean validateBody(String body, String type) {
-        if ((type.equals("Very Difficult") || type.equals("Difficult")) && body.length() >= 300) {
-            System.out.println("Type is Difficult and Very Difficult, The post body is valid.");
-            return true;
-        } else if (body.length() >= 250) {
-            System.out.println("The post body is valid.");
-            return true;
-        } else
+        if ((type.equals("Very Difficult") || type.equals("Difficult")) && body.length() < 30) {
+            System.out.println("Type is Difficult or Very Difficult, The post body character count is invalid.");
+            return false;
+        } else if (body.length() < 25) {
             System.out.println("The post body is invalid.");
-        return false;
+            return false;
+        } else
+            System.out.println("The post body is valid.");
+        return true;
     }
 
     /**
@@ -96,6 +96,7 @@ public class Post {
     public boolean validateType(String type) {
         for (String validType : postTypes) {
             if (validType.equals(type)) {
+                System.out.println("The post Type exist.");
                 return true;
             }
         }
@@ -106,9 +107,11 @@ public class Post {
     public boolean containsUpperCase(String str) {
         for (int i = 0; i < str.length(); i++) {
             if (Character.isUpperCase(str.charAt(i))) {
+                System.out.println("The string has upper case.");
                 return true;
             }
         }
+        System.out.println("The string has no upper case.");
         return false;
     }
 
@@ -119,7 +122,6 @@ public class Post {
      * Easy type posts number of tags should >=2 && <=3.
      **/
     private boolean validateTags(String[] tags, String type) {
-        // go through each tag to check character count and case criteria
         for (String tag : tags) {
             if (!(tag.length() >= 2 && tag.length() <= 10) || containsUpperCase(tag)) {
                 System.out.println("Tag length not in criteria or contains uppercase letters.");
@@ -134,24 +136,30 @@ public class Post {
             System.out.println("The number of tags is invalid.");
             return false;
         }
+        System.out.println("The post tags is valid.");
         return true;
     }
 
     private boolean checkStatusExist(String status) {
         for (String emergency : postEmergency) {
             if (emergency.equals(status)) {
-                return false;
+                System.out.println("The post status exist.");
+                return true;
             }
         }
-        System.out.println("The post emergency status does not exist.");
+        System.out.println("The post status does not exist.");
         return false;
     }
 
     private boolean validateEmergency(String type, String status) {
-        if (!checkStatusExist(status) && type.equals("Easy") && (status.equals("Immediately Needed") || !status.equals("Highly Needed")))
+        if (checkStatusExist(status) && type.equals("Easy") && (status.equals("Immediately Needed") || status.equals("Highly Needed"))) {
+            System.out.println("Easy post type status cannot be Immediately Needed or Highly Needed.");
             return false;
-        else if (!checkStatusExist(status) && type.equals("Easy") && status.equals("Ordinary"))
+        } else if (checkStatusExist(status) && (type.equals("Difficult") || type.equals("Very Difficult")) && status.equals("Ordinary")) {
+            System.out.println("Difficult and Very Difficult post type status cannot be Ordinary.");
             return false;
+        }
+        System.out.println("The post status is valid.");
         return true;
     }
 
@@ -226,13 +234,15 @@ public class Post {
 
 
     public static void main(String[] args) {
-        Post post = new Post(1, "Valid12345",
-                "This123 ",
-                new String[]{"tag1", "tag1", "tag2"}, "Difficult", "Highly Needed");
+        String[] tags = new String[]{"tag1", "tag2", "tag3"};
+        Post post = new Post(1, "Hello123", "post body characters < 300.", tags, "Easy", "Ordinary");
 
-        post.validateEmergency(post.type, post.status);
-//        System.out.println(post.validateTags(post.postTags, post.type));
+        System.out.println(post.postBody.length());
         System.out.println(post.validateEmergency(post.type, post.status));
+
+//        post.validateEmergency(post.type, post.status);
+//        System.out.println(post.validateTags(post.postTags, post.type));
+//        System.out.println(post.validateEmergency(post.type, post.status));
 
 //        private String[] postTypes = {"Very Difficult", "Difficult", "Easy"};
 //        private String[] postEmergency = {"Immediately Needed", "Highly Needed", "Ordinary"};
