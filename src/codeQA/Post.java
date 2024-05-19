@@ -29,11 +29,11 @@ public class Post {
     }
 
     public boolean addPost() {
-        if (validateTitle(postTitle)
-                && validateBody(postBody, type)
-                && validateTags(postTags, type)
-                && validateType(type)
-                && validateEmergency(type, status)) {
+        if (validTitle(postTitle)
+                && validBody(postBody, type)
+                && validTags(postTags, type)
+                && validType(type)
+                && validStatus(type, status)) {
             // If all conditions are met, add the post to the TXT file
             try {
                 FileWriter writer = new FileWriter("post.txt", true);
@@ -62,7 +62,7 @@ public class Post {
      * The title's length is between 10 and 250 characters, inclusive.
      * The title starts with exactly five alphabetic characters (either uppercase or lowercase).
      **/
-    private boolean validateTitle(String title) {
+    private boolean validTitle(String title) {
         String pattern = "^[a-zA-Z]{5}.*";
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(title);
@@ -78,7 +78,7 @@ public class Post {
      * Check if the post body character count is >= 300 for post types "Difficult" and "Very Difficult".
      * Other types of post should have a minimum of 250 characters.
      **/
-    private boolean validateBody(String body, String type) {
+    private boolean validBody(String body, String type) {
         if ((type.equals("Very Difficult") || type.equals("Difficult")) && body.length() < 30) {
             System.out.println("Type is Difficult or Very Difficult, The post body character count is invalid.");
             return false;
@@ -93,7 +93,7 @@ public class Post {
     /**
      * Check if the post type exist in the given array of types
      **/
-    public boolean validateType(String type) {
+    public boolean validType(String type) {
         for (String validType : postTypes) {
             if (validType.equals(type)) {
                 System.out.println("The post Type exist.");
@@ -121,7 +121,7 @@ public class Post {
      * The number of tags for all posts should be >=2
      * Easy type posts number of tags should >=2 && <=3.
      **/
-    private boolean validateTags(String[] tags, String type) {
+    private boolean validTags(String[] tags, String type) {
         for (String tag : tags) {
             if (!(tag.length() >= 2 && tag.length() <= 10) || containsUpperCase(tag)) {
                 System.out.println("Tag length not in criteria or contains uppercase letters.");
@@ -151,7 +151,7 @@ public class Post {
         return false;
     }
 
-    private boolean validateEmergency(String type, String status) {
+    private boolean validStatus(String type, String status) {
         if (checkStatusExist(status) && type.equals("Easy") && (status.equals("Immediately Needed") || status.equals("Highly Needed"))) {
             System.out.println("Easy post type status cannot be Immediately Needed or Highly Needed.");
             return false;
@@ -162,83 +162,65 @@ public class Post {
         System.out.println("The post status is valid.");
         return true;
     }
+//////////////////////////////////////////////////////////////////////////////////////////
 
-
-    public boolean addComment2(String commentText) {
-        // Condition 1: Check if comment text meets length and capitalization criteria
-        String[] words = commentText.split("\\s+");
-        if (words.length < 4 || words.length > 10 || !Character.isUpperCase(words[0].charAt(0))) {
-            return false; // Comment text doesn't meet the conditions
-        }
-
-        // Condition 2: Check the maximum number of comments based on post type
-        if (type.equals("Easy") || status.equals("Ordinary")) {
-            if (postComments.size() >= 3) {
-                return false; // Maximum comment limit reached for Easy or Ordinary posts
-            }
-        } else {
-            if (postComments.size() >= 5) {
-                return false; // Maximum comment limit reached for other posts
-            }
-        }
-
-        // If conditions met, add the comment to the TXT file
-        try (FileWriter writer = new FileWriter("comment.txt", true)) {
-            writer.write("ID: " + postID + "\n");
-            writer.write("Comment: " + commentText + "\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Error writing to file
-        }
-
-        // Add the comment to the post's comments list
-        postComments.add(commentText);
-
-        return true; // Comment successfully added
-    }
-
-
-    public boolean addComment(String commentText) throws IOException {
-        if (validateCommentText(commentText) && validateCommentCount()) {
-            // If both conditions are met, add the comment to the TXT file and post's comments list
-//            try (
-            FileWriter writer = new FileWriter("comment.txt", true);
-//            ) {
-            writer.write("ID: " + postID + "\n");
-            writer.write("Comment: " + commentText + "\n");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return false; // Error writing to file
-//            }
-
+    public boolean addComment(String commentText) {
+        if (validWordCount(commentText) && validCommentCount()) {
             postComments.add(commentText);
-            return true; // Comment successfully added
-        }
-        return false; // Comment text or count validation failed
-    }
+            try {
+                FileWriter writer = new FileWriter("comment.txt", true);
+                writer.write("ID: " + postID + "\n");
+                writer.write("Comment: " + commentText + "\n");
+                System.out.println("add Comment success.");
+                writer.write("\n\n");
+                writer.close();
+                return true;
 
-    private boolean validateCommentText(String commentText) {
-        // Check if comment text meets length and capitalization criteria
-        String[] words = commentText.split("\\s+");
-        return words.length >= 4 && words.length <= 10 && Character.isUpperCase(words[0].charAt(0));
-    }
-
-    private boolean validateCommentCount() {
-        // Check the maximum number of comments based on post type
-        if (type.equals("Easy") || status.equals("Ordinary")) {
-            return postComments.size() < 3; // Maximum comment limit not reached for Easy or Ordinary posts
+            } catch (IOException e) {
+                return false;
+            }
         } else {
-            return postComments.size() < 5; // Maximum comment limit not reached for other posts
+            // If any condition fails, return false
+            return false;
         }
+    }
+
+
+    private boolean validWordCount(String commentText) {
+        // removes leading and trailing whitespace
+        // "\\s+" matches one or more consecutive whitespace characters
+        // splits the string into an array of words
+        String[] words = commentText.trim().split("\\s+");
+        if (words.length >= 4 && words.length <= 10 && Character.isUpperCase(words[0].charAt(0))) {
+            System.out.println("Comment word count is valid.");
+            return true;
+        } else
+            System.out.println("Comment word count or first character is not valid.");
+        return false;
+    }
+
+    private boolean validCommentCount() {
+        if ((type.equals("Easy") || status.equals("Ordinary")) && postComments.size() == 3) {
+            System.out.println("Easy post type comment count reached max 3");
+            return false;
+        } else if (postComments.size() == 5) {
+            System.out.println("Comment count reached max 5");
+            return false;
+        }
+        System.out.println("Comment valid");
+        return true;
     }
 
 
     public static void main(String[] args) {
         String[] tags = new String[]{"tag1", "tag2", "tag3"};
         Post post = new Post(1, "Hello123", "post body characters < 300.", tags, "Easy", "Ordinary");
+        System.out.println(post.postComments.size());
 
-        System.out.println(post.postBody.length());
-        System.out.println(post.validateEmergency(post.type, post.status));
+        post.addComment("Test 123 abc qwe");
+
+//        System.out.println(post.postBody.length());
+//        System.out.println(post.validStatus(post.type, post.status));
 
 //        post.validateEmergency(post.type, post.status);
 //        System.out.println(post.validateTags(post.postTags, post.type));
