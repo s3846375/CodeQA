@@ -54,7 +54,6 @@ public class Post {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(title);
         if (title.length() >= 10 && title.length() <= 250 && matcher.matches()) {
-//            System.out.println("The post title is valid.");
             return true;
         } else
             System.out.println("The post title is invalid.");
@@ -73,7 +72,6 @@ public class Post {
             System.out.println("The post body is invalid.");
             return false;
         } else
-//            System.out.println("The post body is valid.");
         return true;
     }
 
@@ -83,7 +81,6 @@ public class Post {
     private boolean validType(String type) {
         for (String validType : postTypes) {
             if (validType.equals(type)) {
-//                System.out.println("The post Type exist.");
                 return true;
             }
         }
@@ -101,7 +98,6 @@ public class Post {
                 return true;
             }
         }
-//        System.out.println("The string has no upper case.");
         return false;
     }
 
@@ -125,7 +121,6 @@ public class Post {
             System.out.println("The number of tags is invalid.");
             return false;
         }
-//        System.out.println("The post tags is valid.");
         return true;
     }
 
@@ -135,7 +130,6 @@ public class Post {
     private boolean checkStatusExist(String status) {
         for (String emergency : postEmergency) {
             if (emergency.equals(status)) {
-//                System.out.println("The post status exist.");
                 return true;
             }
         }
@@ -154,7 +148,6 @@ public class Post {
             System.out.println("Difficult and Very Difficult post type status cannot be Ordinary.");
             return false;
         }
-//        System.out.println("The post status is valid.");
         return true;
     }
 
@@ -180,7 +173,6 @@ public class Post {
     private boolean validText(String commentText) {
         String[] words = commentText.trim().split("\\s+");
         if (words.length >= 4 && words.length <= 10 && Character.isUpperCase(words[0].charAt(0)) ) {
-//            System.out.println("Comment text is valid.");
             return true;
         } else
             System.out.println("Comment word count or first character is not valid.");
@@ -199,7 +191,6 @@ public class Post {
             System.out.println("Comment count reached max 5");
             return false;
         }
-//        System.out.println("Comment count valid");
         return true;
     }
 
