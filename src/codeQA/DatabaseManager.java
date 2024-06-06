@@ -53,14 +53,13 @@ public class DatabaseManager {
     /**
      * Retrieve all posts from file "post.txt"
      **/
-    public static ArrayList<Post> getPostFromDB() {
+    public static ArrayList<Post> getPostHistoryFromDB() {
         ArrayList<Post> posts = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader("post.txt"));
 
             String line;
             while ((line = br.readLine()) != null) {
-                // Read post information line by line
                 int postID = Integer.parseInt(line);
                 String postTitle = br.readLine();
                 String postBody = br.readLine();
@@ -97,7 +96,6 @@ public class DatabaseManager {
 
             String line;
             while ((line = br.readLine()) != null) {
-                // Read post information line by line
                 int id = Integer.parseInt(line);
                 String comment = br.readLine();
                 // Check if the ID matches the provided postID

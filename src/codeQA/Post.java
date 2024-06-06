@@ -12,8 +12,8 @@ public class Post {
     protected String type;
     protected String status;
 
-    private String[] postTypes = {"Very Difficult", "Difficult", "Easy"};
-    private String[] postEmergency = {"Immediately Needed", "Highly Needed", "Ordinary"};
+    private final String[] postTypes = {"Very Difficult", "Difficult", "Easy"};
+    private final String[] postEmergency = {"Immediately Needed", "Highly Needed", "Ordinary"};
     private ArrayList<String> postComments;
 
     public Post(int postID, String postTitle, String postBody, String[] postTags, String type, String status) {
@@ -54,7 +54,7 @@ public class Post {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(title);
         if (title.length() >= 10 && title.length() <= 250 && matcher.matches()) {
-            System.out.println("The post title is valid.");
+//            System.out.println("The post title is valid.");
             return true;
         } else
             System.out.println("The post title is invalid.");
@@ -73,7 +73,7 @@ public class Post {
             System.out.println("The post body is invalid.");
             return false;
         } else
-            System.out.println("The post body is valid.");
+//            System.out.println("The post body is valid.");
         return true;
     }
 
@@ -83,7 +83,7 @@ public class Post {
     private boolean validType(String type) {
         for (String validType : postTypes) {
             if (validType.equals(type)) {
-                System.out.println("The post Type exist.");
+//                System.out.println("The post Type exist.");
                 return true;
             }
         }
@@ -97,11 +97,11 @@ public class Post {
     public boolean containsUpperCase(String str) {
         for (int i = 0; i < str.length(); i++) {
             if (Character.isUpperCase(str.charAt(i))) {
-                System.out.println("The string has upper case.");
+                System.out.println("The tag string has upper case.");
                 return true;
             }
         }
-        System.out.println("The string has no upper case.");
+//        System.out.println("The string has no upper case.");
         return false;
     }
 
@@ -125,7 +125,7 @@ public class Post {
             System.out.println("The number of tags is invalid.");
             return false;
         }
-        System.out.println("The post tags is valid.");
+//        System.out.println("The post tags is valid.");
         return true;
     }
 
@@ -135,7 +135,7 @@ public class Post {
     private boolean checkStatusExist(String status) {
         for (String emergency : postEmergency) {
             if (emergency.equals(status)) {
-                System.out.println("The post status exist.");
+//                System.out.println("The post status exist.");
                 return true;
             }
         }
@@ -154,11 +154,13 @@ public class Post {
             System.out.println("Difficult and Very Difficult post type status cannot be Ordinary.");
             return false;
         }
-        System.out.println("The post status is valid.");
+//        System.out.println("The post status is valid.");
         return true;
     }
 
-    // check all validations for comment and add to text file "comment.txt" if valid.
+    /**
+     * check all validations for comment and add to text file if valid.
+     * **/
     public boolean addComment(String commentText) {
         if (validText(commentText) && validCommentCount()) {
             DatabaseManager.saveCommentToDB(this.postID, commentText);
@@ -172,19 +174,22 @@ public class Post {
 
 
     /**
-     * Split the comment string into an array of words by finding whitespace between characters.
-     * Use array length to verify the word count >=4 and <=10.
+     * Split the comment string into an array of words and use array length to verify the word count >=4 and <=10.
+     * Check if the first character of the comment is uppercase letter.
      **/
     private boolean validText(String commentText) {
         String[] words = commentText.trim().split("\\s+");
-        if (words.length >= 4 && words.length <= 10 && Character.isUpperCase(words[0].charAt(0))) {
-            System.out.println("Comment text is valid.");
+        if (words.length >= 4 && words.length <= 10 && Character.isUpperCase(words[0].charAt(0)) ) {
+//            System.out.println("Comment text is valid.");
             return true;
         } else
             System.out.println("Comment word count or first character is not valid.");
         return false;
     }
 
+    /**
+     * Check comment count for specific post ID based on post type.
+     **/
     private boolean validCommentCount() {
         postComments = DatabaseManager.getCommentFromDB(postID);
         if ((type.equals("Easy") || status.equals("Ordinary")) && postComments.size() >= 3) {
@@ -194,7 +199,7 @@ public class Post {
             System.out.println("Comment count reached max 5");
             return false;
         }
-        System.out.println("Comment count valid");
+//        System.out.println("Comment count valid");
         return true;
     }
 
