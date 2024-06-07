@@ -76,19 +76,6 @@ public class Post {
     }
 
     /**
-     * Check if the post type exist in the given array of types
-     **/
-    private boolean validType(String type) {
-        for (String validType : postTypes) {
-            if (validType.equals(type)) {
-                return true;
-            }
-        }
-        System.out.println("The post Type does not exist.");
-        return false;
-    }
-
-    /**
      * Check if any post Tag contain uppercase letters.
      **/
     public boolean containsUpperCase(String str) {
@@ -125,6 +112,19 @@ public class Post {
     }
 
     /**
+     * Check if the post type exist in the given array of types
+     **/
+    private boolean validType(String type) {
+        for (String validType : postTypes) {
+            if (validType.equals(type)) {
+                return true;
+            }
+        }
+        System.out.println("The post Type does not exist.");
+        return false;
+    }
+
+    /**
      * Check if the post status exist in the given array of status (postEmergency)
      **/
     private boolean checkStatusExist(String status) {
@@ -150,6 +150,9 @@ public class Post {
         }
         return true;
     }
+
+
+
 
     /**
      * check all validations for comment and add to text file if valid.
