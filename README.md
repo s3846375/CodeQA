@@ -3,5 +3,3 @@ Christina Tu (s3846375)
 * IDE: IntelliJ
 * Java Version: 17
 * Test: Junit 5
-
-DEMO
